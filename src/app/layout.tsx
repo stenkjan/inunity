@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import HiddenForm from "./components/HiddenForm";
+import Navbar from "@/components/custom/Navbar";
+import Footer from "@/components/custom/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Event Registration",
-  description: "Register for our event",
+  title: "Your Company - E-Commerce & IT Services",
+  description: "Custom e-commerce solutions, website development and IT services for businesses of all sizes.",
 };
 
 export default function RootLayout({
@@ -24,10 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <HiddenForm />
-        {children}
+    <html lang="de" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-gradient-to-b from-slate-900 to-slate-800 text-white`}>
+        <Navbar />
+        <main className="flex-grow pt-16">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

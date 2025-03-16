@@ -1,49 +1,101 @@
+// This is a Server Component - we can use async/await here
 import React from 'react';
-import EventFlyer from '@/components/custom/EventFlyer';
-import RegistrationForm from '@/components/custom/RegistrationForm';
+import HomeHero from '@/components/custom/HomeHero';
+import ServiceCard from '@/components/custom/ServiceCard';
+import ShopPreview from '@/components/custom/ShopPreview';
+import ProjectsPreview from '@/components/custom/ProjectsPreview';
 
-export default function Home() {
+// Example of how to fetch data in a server component
+async function getServicesData() {
+  // This would typically fetch from an API or database
+  // For now, we'll use static data
+  return [
+    {
+      title: "E-Commerce Solutions",
+      description: "Custom online shops built with Wix, Squarespace and integrated with Printful for print-on-demand products.",
+      icon: "shopping-bag",
+    },
+    {
+      title: "Website Development",
+      description: "Professional websites with responsive design, SEO optimization, and content management systems.",
+      icon: "monitor",
+    },
+    {
+      title: "IT Services",
+      description: "Website maintenance, content updates, and technical support to keep your online presence running smoothly.",
+      icon: "settings",
+    }
+  ];
+}
+
+async function getFeaturedProjects() {
+  // This would typically fetch from an API or database
+  return [
+    {
+      title: "School Merchandise Shops",
+      description: "Custom webshops for schools featuring their logos on various merchandise items through print-on-demand services.",
+      imageUrl: "/api/placeholder/800/600",
+      tags: ["E-Commerce", "Print-on-Demand", "Wix", "Printful"],
+      link: "/projects"
+    },
+    {
+      title: "Company Blog & Shop",
+      description: "Combined blog and e-commerce platform showcasing our products and services with integrated payment solutions.",
+      imageUrl: "/api/placeholder/800/600",
+      tags: ["Blog", "E-Commerce", "Squarespace"],
+      link: "/projects"
+    }
+  ];
+}
+
+export default async function Home() {
+  // Fetch data in parallel using Promise.all
+  const [services, featuredProjects] = await Promise.all([
+    getServicesData(),
+    getFeaturedProjects()
+  ]);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
-      {/* Static form for Netlify to detect - hidden from view */}
-      <form name="event-registration" data-netlify="true" netlify-honeypot="bot-field" hidden>
-        <input type="text" name="name" />
-        <input type="email" name="email" />
-        <input type="checkbox" name="consent" />
-      </form>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <HomeHero 
+        title="Creating Digital Solutions for Your Business"
+        subtitle="E-commerce development, IT services, and custom web solutions tailored to your needs"
+        primaryButtonText="View Our Projects"
+        primaryButtonLink="/projects"
+        secondaryButtonText="Learn More"
+        secondaryButtonLink="/about"
+      />
 
-      {/* Header */}
-      <header className="fixed w-full bg-transparent backdrop-blur-sm z-50 p-4">
-        <nav className="container mx-auto flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="flex items-center space-x-4">
-            <img src="/ntgl_logo.png" alt="NTGL Logo" className="h-10 max-w-xs filter invert" />
-            <h1 className="text-2xl font-bold">NTGL</h1>
+      {/* Services Section */}
+      <section className="py-16 bg-slate-800/50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-12 text-center">Our Services</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {services.map((service, index) => (
+              <ServiceCard 
+                key={index}
+                title={service.title}
+                description={service.description}
+                icon={service.icon}
+              />
+            ))}
           </div>
-          <div className="flex space-x-4">
-            <a href="#register" className="hover:text-blue-400">Registrieren</a>
-            <a href="/impressum" className="hover:text-blue-400">Datenschutzerklärung</a>
-          </div>
-        </nav>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 pt-20">
-        <EventFlyer />
-        <RegistrationForm />
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 py-6">
-        <div className="container mx-auto px-4 text-center text-slate-400">
-          <p>© 2025 NTGL. Alle Rechte vorbehalten.</p>
-          <p className="mt-2">
-            <a href="https://www.instagram.com/ntgl.at/" className="text-slate-400 hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">
-              <img src="/instagram_icon.png" alt="Instagram Icon" className="inline h-5 w-5 mr-2 filter invert" />
-              @ntgl.at
-            </a>
-          </p>
         </div>
-      </footer>
+      </section>
+
+      {/* Shop Preview Section */}
+      <ShopPreview 
+        title="Shop Preview"
+        subtitle="Explore our upcoming online store featuring custom products and merchandise."
+      />
+
+      {/* Featured Projects */}
+      <ProjectsPreview 
+        title="Featured Projects"
+        subtitle="Take a look at some of our recent work"
+        projects={featuredProjects}
+      />
     </div>
   );
 }
